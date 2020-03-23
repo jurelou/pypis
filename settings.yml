@@ -1,0 +1,18 @@
+default:
+  APP_NAME: biteproject
+  LOG_FILE: /tmp/lol.log
+  LOG_LEVEL: debug 
+
+  fastapi:
+    DEBUG: true
+    API_PREFIX: /api
+
+  database:
+    URL: postgresql://pypis:somepassword@localhost:5432/pypis
+    MAX_CONNECTIONS_COUNT: 10
+    MIN_CONNECTIONS_COUNT: 10
+
+
+
+development:
+  mdr: LOG_LEVEq<sd

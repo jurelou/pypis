@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: pypis
+      POSTGRES_PASSWORD: somepassword
+      POSTGRES_DB: pypis
+    ports:
+      -  5432:5432
+    volumes:
+      - pypis-db:/var/lib/postgresql/data
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+volumes:
+  pypis-db:
