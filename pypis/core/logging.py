@@ -1,5 +1,6 @@
 import logging
 import sys
+
 from dynaconf import settings
 from loguru import logger
 
@@ -11,11 +12,8 @@ class InterceptHandler(logging.Handler):
 
 
 def setup_logger():
-    LOGGING_LEVEL = logging.DEBUG if settings.LOG_LEVEL is "debug" else logging.INFO
-    logging.basicConfig(
-        handlers=[InterceptHandler(level=LOGGING_LEVEL)], level=LOGGING_LEVEL
+    L_LEVEL = logging.DEBUG if settings.LOGS.LEVEL == "debug" else logging.INFO
+    logging.basicConfig(handlers=[InterceptHandler(level=L_LEVEL)], level=L_LEVEL)
+    logger.configure(
+        handlers=[{"sink": sys.stderr, "level": L_LEVEL}, {"sink": settings.LOGS.FILE}]
     )
-    logger.configure(handlers=[
-        {"sink": sys.stderr, "level": LOGGING_LEVEL},
-        {"sink": settings.LOG_FILE}
-        ])

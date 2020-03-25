@@ -1,7 +1,9 @@
 default:
   APP_NAME: biteproject
-  LOG_FILE: /tmp/lol.log
-  LOG_LEVEL: debug 
+
+  logs:
+    LEVEL: info
+    FILE: /tmp/lol.log
 
   fastapi:
     DEBUG: true
@@ -12,7 +14,16 @@ default:
     MAX_CONNECTIONS_COUNT: 10
     MIN_CONNECTIONS_COUNT: 10
 
+  pypi_proxy:
+    TIMEOUT: 10
 
+  packages:
+    BASE_DIRECTORY: /tmp/pkgs
+    MAX_PACKAGES_VERSION_CACHE: 3
 
 development:
   mdr: LOG_LEVEq<sd
+
+testing:
+  APP_NAME: testing-app
+  LOG_LEVEL: debug

@@ -1,8 +1,9 @@
 import asyncpg
+from dynaconf import settings
 from fastapi import FastAPI
 from loguru import logger
 
-from dynaconf import settings
+from pypis.db.database import create_models
 
 
 async def connect_to_db(app: FastAPI) -> None:
@@ -13,13 +14,11 @@ async def connect_to_db(app: FastAPI) -> None:
         min_size=settings.DATABASE.MIN_CONNECTIONS_COUNT,
         max_size=settings.DATABASE.MAX_CONNECTIONS_COUNT,
     )
-
+    create_models()
     logger.info("Connection established")
 
 
 async def close_db_connection(app: FastAPI) -> None:
     logger.info("Closing connection to database")
-
     await app.state.pool.close()
-
     logger.info("Connection closed")
