@@ -15,10 +15,12 @@ default:
     MIN_CONNECTIONS_COUNT: 10
 
   pypi_proxy:
-    TIMEOUT: 10
+    PYPI_URL: https://pypi.org
+    TIMEOUT: 5
 
   packages:
-    BASE_DIRECTORY: /tmp/pkgs
+    HOSTED_FILES_URI: http://localhost:9090
+    BASE_DIRECTORY: ./packages
     MAX_PACKAGES_VERSION_CACHE: 3
 
 development:

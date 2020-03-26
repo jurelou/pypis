@@ -20,14 +20,19 @@ validators = [
     ),
     # Packages validator
     Validator("PACKAGES.BASE_DIRECTORY", must_exist=True, is_type_of=str),
-    Validator("PACKAGES.MAX_PACKAGES_VERSION_CACHE", must_exist=True, is_type_of=int, gt=0),
-    #Pypi proxy validator
+    Validator(
+        "PACKAGES.MAX_PACKAGES_VERSION_CACHE", must_exist=True, is_type_of=int, gt=0
+    ),
+    Validator("PACKAGES.HOSTED_FILES_URI", must_exist=True, is_type_of=str),
+    # Pypi proxy validator
     Validator("PYPI_PROXY.TIMEOUT", must_exist=True, is_type_of=int, gt=1),
+    Validator("PYPI_PROXY.PYPI_URL", must_exist=True, is_type_of=str),
 ]
 
 
 settings.validators.register(*validators)
 
 
-def validate_settings():
+def validate_settings() -> None:
+    """Validate dynaconf settings."""
     settings.validators.validate()

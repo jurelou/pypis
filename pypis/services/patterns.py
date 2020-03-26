@@ -1,10 +1,11 @@
-import importlib
+from typing import Dict
 
 
 class SingletonMetaClass(type):
-    _instances_ = {}
+    _instances_: Dict[type, type] = {}
 
-    def __call__(cls, *args, **kwargs):
+    def __call__(cls, *args, **kwargs):  # type: ignore
+        """Singleton metaclass."""
         if cls not in cls._instances_:
             cls._instances_[cls] = super(SingletonMetaClass, cls).__call__(
                 *args, **kwargs

@@ -1,8 +1,14 @@
-from pkg_resources import parse_version
 import functools
 from typing import List
 
-def compare_versions(version_a: str, version_b: str):
+from pkg_resources import parse_version
+
+
+def compare_versions(version_a: str, version_b: str) -> int:
+    """Compare versions as defined by PEP 440.
+
+    https://www.python.org/dev/peps/pep-0440/
+    """
     v_a = parse_version(version_a)
     v_b = parse_version(version_b)
     if v_a == v_b:
@@ -13,5 +19,13 @@ def compare_versions(version_a: str, version_b: str):
         return -1
 
 
-def sort_list_by_version(d: List[str], reverse: bool = False):
-    return sorted(d, key=functools.cmp_to_key(compare_versions), reverse=reverse)
+def sort_list_by_version(l: List[str], reverse: bool = False) -> List[str]:
+    """Sort a list of versions as defined by PEP 440.
+
+    Args:
+        l (List[str]): List of strings (versions) to be parsed
+        reverse (bool): Whether or not to sort in reverse order.
+    Returns:
+        Sorted list `l`.
+    """
+    return sorted(l, key=functools.cmp_to_key(compare_versions), reverse=reverse)

@@ -1,13 +1,15 @@
-from sqlalchemy import Column, DateTime, Integer, String, Table, ForeignKey
+from sqlalchemy import Column, ForeignKey, Integer, String, Table
 from sqlalchemy.orm import relationship
 
 from pypis.db.database import Base
 
-association_table = Table('association', Base.metadata,
-    Column('package', Integer, ForeignKey('package.id')),
-    Column('classifier', Integer, ForeignKey('classifier.id'))
+association_table = Table(
+    "association",
+    Base.metadata,
+    Column("package", Integer, ForeignKey("package.id")),
+    Column("classifier", Integer, ForeignKey("classifier.id")),
 )
-        
+
 
 class Classifier(Base):
     __tablename__ = "classifier"
@@ -23,10 +25,10 @@ class Package(Base):
     name = Column(String, index=True)
     author = Column(String)
     author_email = Column(String)
-    
+
     description = Column(String)
     description_content_type = Column(String)
-    
+
     classifiers = relationship("Classifier", secondary=association_table)
 
     releases = relationship("Release", back_populates="package")
@@ -36,4 +38,3 @@ class Package(Base):
     project_url = Column(String)
     summary = Column(String)
     version = Column(String)
-

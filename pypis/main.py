@@ -12,6 +12,7 @@ from pypis.core.events import start_app_handler, stop_app_handler
 
 
 def get_app() -> FastAPI:
+    """Configure and returns a FastAPI application."""
     app = FastAPI(
         title=settings.APP_NAME, debug=settings.FASTAPI.DEBUG, version=__version__
     )

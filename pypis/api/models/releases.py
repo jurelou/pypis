@@ -1,6 +1,7 @@
-from pydantic import BaseConfig, BaseModel
 from datetime import datetime
-from typing import Dict, List, Optional
+from typing import Optional
+
+from pydantic import BaseConfig, BaseModel
 
 
 class ReleaseCreate(BaseModel):
@@ -15,9 +16,10 @@ class ReleaseCreate(BaseModel):
     python_version: str
     requires_python: Optional[str]
     size: int
-    upload_time: str
-    upload_time_iso_8601: str
+    upload_time: datetime
+    upload_time_iso_8601: datetime
     url: str
+
     class Config(BaseConfig):
         allow_population_by_field_name = True
         orm_mode = True
