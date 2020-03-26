@@ -8,6 +8,13 @@ def compare_versions(version_a: str, version_b: str) -> int:
     """Compare versions as defined by PEP 440.
 
     https://www.python.org/dev/peps/pep-0440/
+    Args:
+        version_a (str): version to be compared
+        version_b (str): version to be compared
+    Returns:
+        0: if versions are the same
+        1: if version_a > version_b
+        -1: if version_a < version_b
     """
     v_a = parse_version(version_a)
     v_b = parse_version(version_b)
