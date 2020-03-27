@@ -24,6 +24,8 @@ setup(
         "sqlalchemy==1.3.15",
         "psycopg2-binary==2.8.4",
         "httpx==0.12.1",
+        "packaging==20.3",
+        "email-validator",
     ],
     extras_require={
         "dev": [

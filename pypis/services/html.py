@@ -50,6 +50,8 @@ def dicts_to_anchors(d: Dict[str, Dict]) -> str:
     """
     response = ""
     for package_name, attributes in d.items():
+        for a, b in attributes.items():
+            print("MMMMMMMMMMMM", a, b)
         string_attributes = " ".join(
             [f'{a}="{html.escape(b)}"' for a, b in attributes.items()]
         )

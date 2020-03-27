@@ -15,6 +15,7 @@ def get_repository(repo_type: Type[BaseRepository]) -> Callable:
     Returns:
         A callable repository from the given type.
     """
+
     async def _get_repo(
         session: Session = Depends(get_db),
     ) -> AsyncGenerator[BaseRepository, None]:

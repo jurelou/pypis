@@ -54,7 +54,7 @@ class ReleasesRepository(BaseRepository):
 
         return db_item
 
-    def package_releases_to_anchors_list(self, package_id: int) -> str:
+    def package_releases_as_anchors(self, package_id: int) -> str:
         """Retrieve all releases from a package as an HTML list of anchors."""
         releases = self.get_package_releases(package_id)
         release_dict = {}
@@ -64,9 +64,12 @@ class ReleasesRepository(BaseRepository):
                 checksum = "#sha256={}".format(release.sha256_digest)
             elif release.md5_digest:
                 checksum = "#md5={}".format(release.md5_digest)
-            release_dict[release.filename] = {
-                "href": "".join([release.url, checksum]),
-                "data-gpg-sig": release.has_sig,
-                "data-requires-python": release.requires_python,
-            }
+            release_dict[release.filename] = {"href": "".join([release.url, checksum])}
+            if hasattr(release, "has_sig"):
+                release_dict[release.filename]["data-gpg-sig"] = release.has_sig
+            if hasattr(release, "requires_python") and release.requires_python:
+                release_dict[release.filename][
+                    "data-requires-python"
+                ] = release.requires_python
+
         return dicts_to_anchors(release_dict)

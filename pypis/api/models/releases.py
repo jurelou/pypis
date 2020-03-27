@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseConfig, BaseModel
+from pypis.api.models.base import BaseModel
 
 
 class ReleaseCreate(BaseModel):
@@ -19,7 +19,3 @@ class ReleaseCreate(BaseModel):
     upload_time: datetime
     upload_time_iso_8601: datetime
     url: str
-
-    class Config(BaseConfig):
-        allow_population_by_field_name = True
-        orm_mode = True

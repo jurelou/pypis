@@ -29,3 +29,8 @@ development:
 testing:
   APP_NAME: testing-app
   LOG_LEVEL: debug
+
+  database:
+    URL: "sqlite:///:memory:"
+    MAX_CONNECTIONS_COUNT: 10
+    MIN_CONNECTIONS_COUNT: 10

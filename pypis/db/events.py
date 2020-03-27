@@ -8,6 +8,7 @@ from pypis.db.database import create_models
 
 async def connect_to_db(app: FastAPI) -> None:
     """Open the database connection."""
+    print("GOOOOOOOOOOOO")
     logger.info("Connecting to {0}", repr(settings.DATABASE.URL))
 
     app.state.pool = await asyncpg.create_pool(

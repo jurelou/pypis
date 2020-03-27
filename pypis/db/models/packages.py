@@ -13,6 +13,7 @@ association_table = Table(
 
 class Classifier(Base):
     __tablename__ = "classifier"
+    __table_args__ = {"sqlite_autoincrement": True}
 
     id = Column(Integer, primary_key=True)
     title = Column(String)
@@ -20,6 +21,7 @@ class Classifier(Base):
 
 class Package(Base):
     __tablename__ = "package"
+    __table_args__ = {"sqlite_autoincrement": True}
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
@@ -38,3 +40,13 @@ class Package(Base):
     project_url = Column(String)
     summary = Column(String)
     version = Column(String)
+    keywords = Column(String)
+    platform = Column(String)
+    maintainer = Column(String)
+
+    maintainer_email = Column(String)
+
+    bugtrack_url = Column(String)
+    docs_url = Column(String)
+    download_url = Column(String)
+    requires_python = Column(String)
