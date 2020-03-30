@@ -1,4 +1,3 @@
-import re
 from typing import Any, Optional
 
 import httpx
@@ -8,7 +7,7 @@ from loguru import logger
 from starlette import status
 
 from pypis.api.models.packages import PackageCreate
-from pypis.api.models.releases import ReleaseCreate
+from pypis.api.models.releases import ReleaseFromPypi
 from pypis.db.repositories.packages import PackagesRepository
 from pypis.db.repositories.releases import ReleasesRepository
 from pypis.services.http import HTTPClient
@@ -106,7 +105,7 @@ class PyPiProxy(HTTPClient):
         for version in sorted_package_releases[max_packages_history:]:
             for release_data in package_releases[version]:
                 release = await releases_repo.store_release(
-                    ReleaseCreate(
+                    ReleaseFromPypi(
                         version=version,
                         sha256_digest=release_data["digests"]["sha256"],
                         **release_data,
@@ -115,7 +114,5 @@ class PyPiProxy(HTTPClient):
                 )
                 list_of_releases.append(release)
 
-        package = PackageCreate(
-            **package_info
-        )
+        package = PackageCreate(**package_info)
         return packages_repo.store_package(package, releases=list_of_releases)

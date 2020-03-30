@@ -4,7 +4,7 @@ from typing import List, Union
 from asyncpg import Record
 from dynaconf import settings
 
-from pypis.api.models.releases import ReleaseCreate
+from pypis.api.models.releases import ReleaseFromPypi
 from pypis.db.models.releases import Release
 from pypis.db.repositories.base import BaseRepository
 from pypis.services.html import dicts_to_anchors
@@ -24,7 +24,9 @@ class ReleasesRepository(BaseRepository):
             .all()
         )
 
-    async def store_release(self, release: ReleaseCreate, package_name: str) -> Record:
+    async def store_release(
+        self, release: ReleaseFromPypi, package_name: str
+    ) -> Record:
         """Download and store a release.
 
         Example:

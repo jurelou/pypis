@@ -1,12 +1,18 @@
+import os
+import shutil
 from typing import List, Union
-
+from starlette.datastructures import UploadFile
 from asyncpg import Record
 
-from pypis.api.models.packages import PackageCreate
-from pypis.db.models.packages import Package
+from pypis.api.models.packages import PackageCreate, PackageUpload
+from pypis.api.models.releases import ReleasePrivateUpload
 from pypis.db.models.classifiers import Classifier
+from pypis.db.models.packages import Package
 from pypis.db.models.releases import Release
 from pypis.db.repositories.base import BaseRepository
+from pypis.services.packages import (create_package_filepath,
+                                     create_package_uri,
+                                     is_standard_package)
 
 
 class PackagesRepository(BaseRepository):
@@ -55,3 +61,37 @@ class PackagesRepository(BaseRepository):
         self.connection.commit()
         self.connection.refresh(package_db)
         return package_db
+
+    async def store_private_package(
+        self,
+        package_file: UploadFile,
+        package_model: PackageUpload,
+        release: ReleasePrivateUpload
+    ) -> Record:
+        """Store a private release."""
+        print("!!!!!!", type(package_file))
+        package_name = package_model.name
+
+        package = self.get_package(package_name)
+
+        absolute_file_path = create_package_filepath(
+            package_name, release.version, release.filename
+        )
+        with open(absolute_file_path, "wb+") as f:
+            shutil.copyfileobj(package_file.file, f)
+
+        release.url = create_package_uri(
+            package_name, release.version, release.filename
+        )
+        release.size = os.stat(absolute_file_path).st_size
+
+        if is_standard_package(package_name):
+            print("STANDARD PACKAGE")
+            return "Its a standard package ..."
+
+        if package:
+            print("PACKAGE {} already exists.".format(package_name))
+        else:
+            print("PACKAGE {} does not exists.".format(package_name))
+            release_db = Release(**release.dict())
+            self.store_package(package_model, releases=[release_db])

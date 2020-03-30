@@ -14,7 +14,9 @@ class TestPackagesServices(unittest.TestCase):
 
     def test_normalize_package_name_02(self):
         should_be = "-testproject-"
-        self.assertEqual(packages.normalize_package_name("._-TestProject-_.."), should_be)
+        self.assertEqual(
+            packages.normalize_package_name("._-TestProject-_.."), should_be
+        )
 
     def test_is_valid_pep440_specifier_00(self):
         self.assertTrue(packages.is_valid_pep440_specifier(">=4.3.*"))

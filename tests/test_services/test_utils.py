@@ -35,11 +35,13 @@ class TestSortListByVersion(unittest.TestCase):
         self.assertEqual(sorted, should_be)
 
     def test_sort_by_version_01(self):
-        should_be = [ "1.0.42", "1.4.20", "1.4.21", "42.0.1"]
+        should_be = ["1.0.42", "1.4.20", "1.4.21", "42.0.1"]
         sorted = utils.sort_list_by_version(["1.0.42", "1.4.20", "1.4.21", "42.0.1"])
         self.assertEqual(sorted, should_be)
 
     def test_sort_by_version_02(self):
-        should_be = [ "42.0.1", "1.4.21", "1.4.20", "1.0.42"]
-        sorted = utils.sort_list_by_version(["1.0.42", "1.4.20", "1.4.21", "42.0.1"], reverse=True)
+        should_be = ["42.0.1", "1.4.21", "1.4.20", "1.0.42"]
+        sorted = utils.sort_list_by_version(
+            ["1.0.42", "1.4.20", "1.4.21", "42.0.1"], reverse=True
+        )
         self.assertEqual(sorted, should_be)

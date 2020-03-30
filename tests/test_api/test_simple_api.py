@@ -8,7 +8,6 @@ from pypis.main import app
 
 client = TestClient(app)
 
-    
 
 class TestSimpleApi(unittest.TestCase):
     def test_get_package(self):

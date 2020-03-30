@@ -3,7 +3,6 @@ from sqlalchemy.orm import relationship
 
 from pypis.db.database import Base
 
-
 association_table = Table(
     "association",
     Base.metadata,
@@ -42,10 +41,8 @@ class Package(Base):
     docs_url = Column(String)
     download_url = Column(String)
 
-
     requires_python = Column(String)
     requires_dist = Column(String)
-
 
     metadata_version = Column(String)
     protocol_version = Column(String)

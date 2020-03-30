@@ -10,10 +10,9 @@ class TestPackagesUpload(unittest.TestCase):
             "classifiers": [],
             "author": "me",
             "version": "1.0",
-
             "metadata_version": "2.0",
             "filetype": "sdist",
-            "md5_digest": "cm9vdAo"
+            "md5_digest": "cm9vdAo",
         }
 
     def test_package_upload_00(self):
@@ -23,37 +22,11 @@ class TestPackagesUpload(unittest.TestCase):
         except Exception as err:
             self.fail("test_package_upload_00 should not have raised {}".format(err))
 
-    def test_package_upload_01(self):
-        package = self.base_package
-        package.pop("md5_digest")
-        with self.assertRaises(ValidationError):
-            PackageUpload(**package)
-
-    def test_package_upload_02(self):
-        package = self.base_package
-        package["filetype"] = "source"
-        with self.assertRaises(ValidationError):
-            PackageUpload(**package)
-
-    def test_package_upload_03(self):
-        package = self.base_package
-        package["filetype"] = "source"
-        package["pyversion"] = "4.2"
-        try:
-            PackageUpload(**self.base_package)
-        except Exception as err:
-            self.fail("test_package_upload_03 should not have raised {}".format(err))
-
     def test_package_upload_04(self):
         package = self.base_package
         package.pop("author")
         with self.assertRaises(ValidationError):
             PackageUpload(**package)
-
-    def test_package_upload_05(self):
-        package = self.base_package
-        p = PackageUpload(**self.base_package)
-        self.assertEqual(p.pyversion, "source")
 
 
 class TestPackagesCreate(unittest.TestCase):
@@ -62,7 +35,7 @@ class TestPackagesCreate(unittest.TestCase):
             "name": "dummypackage",
             "classifiers": [],
             "author": "me",
-            "version": "1.0"
+            "version": "1.0",
         }
 
     def test_package_00(self):
@@ -85,7 +58,9 @@ class TestPackagesCreate(unittest.TestCase):
 
     def test_package_03(self):
         package = self.base_package
-        package["summary"] = """
+        package[
+            "summary"
+        ] = """
         multiline
         summary
         """

@@ -1,16 +1,21 @@
 import pydantic
-from pydantic import EmailStr, AnyHttpUrl
+from typing import Any
+from pydantic import AnyHttpUrl, EmailStr
+
 
 class EmailEmptyAllowedStr(EmailStr):
     @classmethod
-    def validate(cls, value: str) -> str:
+    def validate(cls, value: str) -> Any:
+        """Allow to pass an empty email."""
         if value == "":
             return value
         return super().validate(value)
 
+
 class AnyHttpUrlEmptyAllowedStr(AnyHttpUrl):
     @classmethod
-    def validate(cls, value: str) -> str:
+    def validate(cls, value: str) -> Any:
+        """Allow to pass an empty URL."""
         if value == "":
             return value
         return super().validate(value, ...)

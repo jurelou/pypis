@@ -9,7 +9,7 @@ class Release(Base):
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     version = Column(String)
-    # comment = Column(String)
+
     comment_text = Column(String)
     filename = Column(String)
     has_sig = Column(String, default=False)
@@ -19,12 +19,15 @@ class Release(Base):
     python_version = Column(String)
     requires_python = Column(String)
     requires_dist = Column(String)
-
+    upload_method = Column(String)
     size = Column(Integer)
-    upload_time = Column(DateTime(timezone=False), nullable=False, server_default=sql.func.now())
-    upload_time_iso_8601 = Column(DateTime(timezone=False), nullable=False, server_default=sql.func.now())
+    upload_time = Column(
+        DateTime(timezone=False), nullable=False, server_default=sql.func.now()
+    )
+    upload_time_iso_8601 = Column(
+        DateTime(timezone=False), nullable=False, server_default=sql.func.now()
+    )
     url = Column(String)
-
 
     package_id = Column(Integer, ForeignKey("package.id"))
     package = relationship("Package", back_populates="releases")
@@ -35,15 +38,8 @@ class Release(Base):
     author = Column(String)
     author_email = Column(String)
 
-    # description = Column(String)
-    # description_content_type = Column(String)
-
     maintainer = Column(String)
-
     maintainer_email = Column(String)
-
-    # license = Column(String)
-
 
     md5_digest = Column(String)
     sha256_digest = Column(String)

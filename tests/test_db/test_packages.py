@@ -5,13 +5,11 @@ from pypis.db.repositories.packages import PackagesRepository
 from pypis.db.database import Base
 
 
-
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 
 
 class TestPackagesRepository(unittest.TestCase):
-
     def setUp(self):
 
         _engine = create_engine("sqlite:///:memory:")
@@ -27,4 +25,3 @@ class TestPackagesRepository(unittest.TestCase):
 
         repo = self.repo.get_packages()
         print("!!!!", repo)
-        
