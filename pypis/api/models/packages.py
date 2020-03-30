@@ -8,19 +8,19 @@ from pydantic import (AnyHttpUrl,
                       validator)
 
 from pypis.api.models.base import BaseModel, EmailEmptyAllowedStr
-from pypis.services.packages import is_valid_pep440_specifier
+from pypis.services.packages import is_valid_pep440_specifier, normalize_package_name
 
 
 class PackageCreate(BaseModel):
     name: str
     classifiers: Optional[Union[List[str], str]]
-    keywords: Optional[str]
+    # keywords: Optional[str]
 
     license: Optional[str]
 
     version: str
     requires_python: Optional[str]
-    platform: Optional[str]
+    # platform: Optional[str]
 
     author: str
     author_email: Optional[EmailEmptyAllowedStr]
@@ -39,6 +39,17 @@ class PackageCreate(BaseModel):
     docs_url: Optional[str]
     download_url: Optional[str]
 
+    requires_dist: Optional[Union[str, List[str]]]
+
+    @validator("requires_dist")
+    def validate_requires_dist(cls, requires_dist: Union[str, List[str]]):
+        if not requires_dist:
+            return ""
+        if not isinstance(requires_dist, list):
+            requires_dist = [requires_dist]
+        return "##".join(requires_dist)
+    
+        pass
     @validator("name")
     def validate_name(cls, name: str):
         name_re = re.compile(
@@ -47,7 +58,7 @@ class PackageCreate(BaseModel):
         assert name_re.match(
             name
         ), "Name should contains only letter, numeric, '.', '_', '-'"
-        return name
+        return normalize_package_name(name)
 
     @validator("version")
     def validate_version(cls, version: str):
@@ -86,13 +97,18 @@ class PackageCreate(BaseModel):
 
 class PackageUpload(PackageCreate):
     metadata_version: str
-    filetype: str
+    protocol_version: Optional[int]
 
-    pyversion: Optional[str]
     comment: Optional[str]
-    md5_digest: Optional[str]
-    sha256_digest: Optional[str]
-    blake2_256_digest: Optional[str]
+
+
+    @validator("protocol_version")
+    def validate_protocol_version(cls, protocol_version: int):
+        if not protocol_version:
+            return protocol_version
+        assert protocol_version == 1
+        return protocol_version
+
 
     @validator("metadata_version")
     def validate_metadata_version(cls, metadata_version: str):
@@ -101,46 +117,3 @@ class PackageUpload(PackageCreate):
             metadata_version in allowed_metadata_versions
         ), "metadata_version not allowed."
         return metadata_version
-
-    @validator("sha256_digest")
-    def validate_md5_digest(cls, sha256_digest: str):
-        if not sha256_digest:
-            return ""
-        sha256_re = re.compile(r"^[A-F0-9]{64}$", re.IGNORECASE)
-        assert sha256_re.match(
-            sha256_digest
-        ), "sha256_digest is not a valid hex-encoded string."
-        return sha256_digest
-
-    @validator("blake2_256_digest")
-    def validate_blake2_256_digestt(cls, blake2_256_digest: str):
-        if not blake2_256_digest:
-            return ""
-        blake2_256_re = re.compile(r"^[A-F0-9]{64}$", re.IGNORECASE)
-        assert blake2_256_re.match(
-            blake2_256_digest
-        ), "blake2_256_digest is not a valid hex-encoded string."
-        return blake2_256_digest
-
-    @root_validator
-    def validate_all(cls, values):
-        values_cpy = values
-        filetype = values_cpy.get("filetype", None)
-        pyversion = values_cpy.get("pyversion", None)
-
-        if filetype != "sdist" and not pyversion:
-            raise ValueError(
-                "Python version is required for binary distribution uploads."
-            )
-
-        if filetype == "sdist":
-            if not pyversion:
-                values_cpy["pyversion"] = "source"
-            elif pyversion != "source":
-                raise ValueError("Use 'source' as Python version for an sdist.")
-
-        md5_digest = values_cpy.get("md5_digest", None)
-        sha256_digest = values_cpy.get("sha256_digest", None)
-        if not md5_digest and not sha256_digest:
-            raise ValueError("Include at least one message digest.")
-        return values_cpy

@@ -56,7 +56,6 @@ class TestPackagesUpload(unittest.TestCase):
         self.assertEqual(p.pyversion, "source")
 
 
-
 class TestPackagesCreate(unittest.TestCase):
     def setUp(self):
         self.base_package = {

@@ -33,3 +33,12 @@ class TestPackagesServices(unittest.TestCase):
 
     def test_is_valid_pep440_specifier_05(self):
         self.assertFalse(packages.is_valid_pep440_specifier("1"))
+
+    def test_is_standard_package_00(self):
+        self.assertFalse(packages.is_standard_package("mypackage"))
+
+    def test_is_standard_package_01(self):
+        self.assertFalse(packages.is_standard_package("gzip.gzip"))
+
+    def test_is_standard_package_03(self):
+        self.assertTrue(packages.is_standard_package("unittest"))

@@ -98,6 +98,7 @@ class PyPiProxy(HTTPClient):
             return None
         package_releases = package_data["releases"]
         package_info = package_data["info"]
+
         sorted_package_releases = sort_list_by_version(package_releases.keys())
 
         list_of_releases = []
@@ -114,5 +115,7 @@ class PyPiProxy(HTTPClient):
                 )
                 list_of_releases.append(release)
 
-        package = PackageCreate(**package_info)
+        package = PackageCreate(
+            **package_info
+        )
         return packages_repo.store_package(package, releases=list_of_releases)

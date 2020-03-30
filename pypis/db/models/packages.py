@@ -3,20 +3,13 @@ from sqlalchemy.orm import relationship
 
 from pypis.db.database import Base
 
+
 association_table = Table(
     "association",
     Base.metadata,
     Column("package", Integer, ForeignKey("package.id")),
     Column("classifier", Integer, ForeignKey("classifier.id")),
 )
-
-
-class Classifier(Base):
-    __tablename__ = "classifier"
-    __table_args__ = {"sqlite_autoincrement": True}
-
-    id = Column(Integer, primary_key=True)
-    title = Column(String)
 
 
 class Package(Base):
@@ -40,7 +33,6 @@ class Package(Base):
     project_url = Column(String)
     summary = Column(String)
     version = Column(String)
-    keywords = Column(String)
     platform = Column(String)
     maintainer = Column(String)
 
@@ -49,4 +41,12 @@ class Package(Base):
     bugtrack_url = Column(String)
     docs_url = Column(String)
     download_url = Column(String)
+
+
     requires_python = Column(String)
+    requires_dist = Column(String)
+
+
+    metadata_version = Column(String)
+    protocol_version = Column(String)
+    comment = Column(String)

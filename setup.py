@@ -25,7 +25,8 @@ setup(
         "psycopg2-binary==2.8.4",
         "httpx==0.12.1",
         "packaging==20.3",
-        "email-validator",
+        "stdlib-list>=0.6.0",
+        "email-validator==1.0.5",
     ],
     extras_require={
         "dev": [

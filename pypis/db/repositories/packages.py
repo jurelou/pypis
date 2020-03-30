@@ -3,7 +3,8 @@ from typing import List, Union
 from asyncpg import Record
 
 from pypis.api.models.packages import PackageCreate
-from pypis.db.models.packages import Classifier, Package
+from pypis.db.models.packages import Package
+from pypis.db.models.classifiers import Classifier
 from pypis.db.models.releases import Release
 from pypis.db.repositories.base import BaseRepository
 
@@ -46,7 +47,6 @@ class PackagesRepository(BaseRepository):
         package_dict = package.dict()
         classifiers = package_dict.pop("classifiers", [])
         package_db = Package(**package_dict)
-
         classifiers = [self._get_or_create_classifier(c) for c in classifiers]
         package_db.classifiers.extend(classifiers)
 
