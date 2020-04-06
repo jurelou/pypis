@@ -1,11 +1,8 @@
 import re
 from datetime import datetime
-from typing import Optional, Any, Dict
+from typing import Any, Dict, Optional
 
-from pydantic import (Schema,
-                      ValidationError,
-                      root_validator,
-                      validator)
+from pydantic import Schema, ValidationError, root_validator, validator
 
 from pypis.api.models.base import EmailEmptyAllowedStr
 from pypis.api.models.metadata import BaseMetadata

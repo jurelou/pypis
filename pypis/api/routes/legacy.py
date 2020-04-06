@@ -4,10 +4,8 @@ from starlette import status
 from starlette.responses import JSONResponse
 
 from pypis.api.dependencies.database import get_repository
-from pypis.api.models.packages import PackageUpload
-from pypis.api.models.releases import ReleasePrivateUpload
-from pypis.db.repositories.packages import PackagesRepository
-from pypis.db.repositories.releases import ReleasesRepository
+from pypis.api.models import ReleasePrivateUpload, PackageUpload
+from pypis.db.repositories import PackagesRepository, ReleasesRepository
 from pypis.services import html
 from pypis.services.packages import normalize_package_name
 from pypis.services.proxy.pypi_proxy import PyPiProxy
@@ -48,7 +46,7 @@ async def create_package(
     if not package_file or not package_file.filename:
         return JSONResponse(
             status=status.HTTP_400_BAD_REQUEST, content="Empty package file."
-            )
+        )
 
     package = PackageUpload(**form)
     release = ReleasePrivateUpload(**form, filename=package_file.filename)

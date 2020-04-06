@@ -1,5 +1,6 @@
-import pydantic
 from typing import Any
+
+import pydantic
 from pydantic import AnyHttpUrl, EmailStr
 
 

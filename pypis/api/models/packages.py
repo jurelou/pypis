@@ -3,9 +3,9 @@ from typing import List, Optional, Union
 
 from pydantic import ValidationError, validator
 
+from pypis.api.models.base import EmailEmptyAllowedStr
 from pypis.api.models.metadata import BaseMetadata
 from pypis.services.packages import normalize_package_name
-from pypis.api.models.base import EmailEmptyAllowedStr
 
 
 class PackageCreate(BaseMetadata):
@@ -62,8 +62,10 @@ class PackageCreate(BaseMetadata):
             r"^([A-Z0-9]|[A-Z0-9][A-Z0-9._-]*[A-Z0-9])$", re.IGNORECASE
         )
         if not name_re.match(name):
-            raise ValidationError("Name should contains only letter, \
-                numeric, '.', '_', '-'")
+            raise ValidationError(
+                "Name should contains only letter, \
+                numeric, '.', '_', '-'"
+            )
         return normalize_package_name(name)
 
     @validator("description_content_type")

@@ -6,10 +6,8 @@ from dynaconf import settings
 from loguru import logger
 from starlette import status
 
-from pypis.api.models.packages import PackageCreate
-from pypis.api.models.releases import ReleaseFromPypi
-from pypis.db.repositories.packages import PackagesRepository
-from pypis.db.repositories.releases import ReleasesRepository
+from pypis.api.models import ReleaseFromPypi, PackageCreate
+from pypis.db.repositories import PackagesRepository, ReleasesRepository
 from pypis.services.http import HTTPClient
 from pypis.services.utils import sort_list_by_version
 

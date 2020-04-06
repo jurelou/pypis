@@ -13,9 +13,8 @@ class TestReleasesFromPypi(unittest.TestCase):
             "md5_digest": "cm9vdAo",
             "url": "http://example.com",
             "version": "42",
-
             "upload_time": datetime.now(),
-            "upload_time_iso_8601": datetime.now()
+            "upload_time_iso_8601": datetime.now(),
         }
 
     def test_release_from_pypi_00(self):
@@ -25,13 +24,11 @@ class TestReleasesFromPypi(unittest.TestCase):
         except Exception as err:
             self.fail("test_release_from_pypi_00 should not have raised {}".format(err))
 
-
     def test_release_from_pypi_01(self):
         release = self.base_release
         release["packagetype"] = "source"
         with self.assertRaises(ValidationError):
             ReleaseFromPypi(**release)
-
 
     def test_release_from_pypi_02(self):
         release = self.base_release
@@ -41,7 +38,6 @@ class TestReleasesFromPypi(unittest.TestCase):
             ReleaseFromPypi(**release)
         except Exception as err:
             self.fail("test_release_from_pypi_00 should not have raised {}".format(err))
-
 
     def test_release_from_pypi_03(self):
         release = self.base_release
@@ -70,7 +66,6 @@ class TestReleasesPrivateUpload(unittest.TestCase):
             "md5_digest": "cm9vdAo",
             "url": "http://example.com",
             "version": "42",
-
         }
 
     def test_private_release_00(self):

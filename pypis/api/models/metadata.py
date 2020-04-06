@@ -1,6 +1,7 @@
 import re
 from typing import Optional
-from pydantic import validator, ValidationError
+
+from pydantic import ValidationError, validator
 
 from pypis.api.models.base import BaseModel
 from pypis.services.packages import is_valid_pep440_specifier

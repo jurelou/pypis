@@ -1,18 +1,19 @@
 import os
 import shutil
 from typing import List, Union
-from starlette.datastructures import UploadFile
-from asyncpg import Record
 
-from pypis.api.models.packages import PackageCreate, PackageUpload
-from pypis.api.models.releases import ReleasePrivateUpload
-from pypis.db.models.classifiers import Classifier
-from pypis.db.models.packages import Package
-from pypis.db.models.releases import Release
+from asyncpg import Record
+from starlette.datastructures import UploadFile
+
+from pypis.api.models import PackageCreate, PackageUpload, ReleasePrivateUpload
+from pypis.db.models import Package, Release, Classifier
 from pypis.db.repositories.base import BaseRepository
 from pypis.services.packages import (create_package_filepath,
                                      create_package_uri,
-                                     is_standard_package)
+                                     canonicalize_package_version,
+                                     check_is_valid_release)
+from pypis.services.exceptions import DuplicateReleaseException
+
 
 
 class PackagesRepository(BaseRepository):
@@ -52,27 +53,51 @@ class PackagesRepository(BaseRepository):
         """
         package_dict = package.dict()
         classifiers = package_dict.pop("classifiers", [])
-        package_db = Package(**package_dict)
+        package_db = Package(**package_dict) 
         classifiers = [self._get_or_create_classifier(c) for c in classifiers]
         package_db.classifiers.extend(classifiers)
-
-        package_db.releases.extend(releases)
+        if releases:
+            package_db.releases.extend(releases)
         self.connection.add(package_db)
         self.connection.commit()
         self.connection.refresh(package_db)
         return package_db
 
+    def _add_release_to_package(self, package_name: str, release: Release) -> Record:
+        package = self.get_package(package_name)
+        version = canonicalize_package_version(release.version)
+        if not package:
+            return None
+        package.releases.append(release)
+        self.connection.commit()
+        return package
+
+
     async def store_private_package(
         self,
         package_file: UploadFile,
         package_model: PackageUpload,
-        release: ReleasePrivateUpload
+        release: ReleasePrivateUpload,
     ) -> Record:
         """Store a private release."""
-        print("!!!!!!", type(package_file))
         package_name = package_model.name
-
         package = self.get_package(package_name)
+        if not package:
+            package = self.store_package(package_model)
+
+        q = self.connection.query(Release).filter(
+                (Release.package_id == package.id)
+                & (Release.version == release.version)
+                & (Release.packagetype == release.packagetype)).first()
+        if q:
+            raise DuplicateReleaseException(f"A release for {package.name} version {release.version} (build: {release.packagetype}) already exists")
+
+
+        q = self.connection.query(Release).filter(Release.filename == release.filename).first()
+        if q:
+            raise DuplicateReleaseException(f"A release file for {package.name} already exists: {release.filename}")
+
+
 
         absolute_file_path = create_package_filepath(
             package_name, release.version, release.filename
@@ -85,13 +110,9 @@ class PackagesRepository(BaseRepository):
         )
         release.size = os.stat(absolute_file_path).st_size
 
-        if is_standard_package(package_name):
-            print("STANDARD PACKAGE")
-            return "Its a standard package ..."
+        release_db = Release(**release.dict())
 
-        if package:
-            print("PACKAGE {} already exists.".format(package_name))
-        else:
-            print("PACKAGE {} does not exists.".format(package_name))
-            release_db = Release(**release.dict())
-            self.store_package(package_model, releases=[release_db])
+
+
+        if check_is_valid_release(package, release_db, absolute_file_path):
+            self._add_release_to_package(package_name, release_db)
