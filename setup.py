@@ -20,7 +20,7 @@ setup(
         "dynaconf[yaml]==2.2.3",
         "uvicorn==0.11.3",
         "loguru==0.4.1",
-        "asyncpg==0.20.1",
+        "asyncpg==0.21.0",
         "sqlalchemy==1.3.15",
         "psycopg2-binary==2.8.4",
         "httpx==0.12.1",
