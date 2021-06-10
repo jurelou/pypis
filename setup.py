@@ -16,7 +16,7 @@ setup(
     url="https://github.com/jurelou/pypis",
     packages=find_packages(),
     install_requires=[
-        "fastapi==0.52.0",
+        "fastapi==0.65.2",
         "dynaconf[yaml]==2.2.3",
         "uvicorn==0.11.3",
         "loguru==0.4.1",
